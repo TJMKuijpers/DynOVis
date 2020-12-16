@@ -546,9 +546,14 @@ function getColor(){
 		var color=d3.scaleLinear().domain([-1*RangePoint,-0.75*RangePoint,-0.5*RangePoint,-0.25*RangePoint,0,0.25*RangePoint,0.5*RangePoint,0.75*RangePoint,RangePoint]).range(colorrange)
 		}
 	if(ColorScaleInput == 'RNASequencing'){
-		var customcale = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
-		var colorrange = ['#CC0000','#FF0000','#FF3333','#FF6666','#FF9999','#FFCC99','#FFB266','#FF9933','#FF8000','#FFFF00','#FFFF33','#FFFF66','#FFFF99','#CCFF99','#B2FF66','#99FF33','#80FF00','#00FF00','#33FF33','#66FF66']
-		var color=d3.scaleLinear().domain(customcale).range(colorrange)
+		var colorsHex = [d3.rgb("#FF0000"),d3.rgb("#FF1100"),d3.rgb("#FF2300"),d3.rgb("#FF3400"),d3.rgb("#FF4600"),d3.rgb("#FF5700"),d3.rgb("#FF6900"),d3.rgb("#FF7B00"),
+			d3.rgb("#FF8C00"),d3.rgb("#FF9E00"),d3.rgb("#FFAF00"),d3.rgb("#FFC100"),d3.rgb("#FFD300"),d3.rgb("#FFE400"),d3.rgb("#FFF600"),d3.rgb("#F7FF00"),
+			d3.rgb("#E5FF00"),d3.rgb("#D4FF00"),d3.rgb("#C2FF00"),d3.rgb("#B0FF00"),d3.rgb("#9FFF00"),d3.rgb("#8DFF00"),d3.rgb("#7CFF00"),d3.rgb("#6AFF00"),d3.rgb("#58FF00"),d3.rgb("#47FF00")
+			,d3.rgb("#35FF00"),d3.rgb("#24FF00"),d3.rgb("#12FF00"),d3.rgb("#00FF00")];
+		var color = d3.scaleLinear().domain([3,5,5.5,5.75,6,6.25,6.5,6.75,7,7.5,8,8.5,9,9.5,10,11,12,13,14,15])
+			.interpolate(d3.interpolateHcl)
+			.range(colorsHex);
+
 	}
 	return color;}
 

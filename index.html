@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>  <script type="application/shiny-singletons"></script>  <script type="application/html-dependencies">json2[2014.02.04];jquery[1.12.4];shiny[1.0.1];datatables[1.10.5];datatables-bootstrap[1.10.5];bootstrap[3.3.7]</script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href='StyleSheet.css' rel='stylesheet'/>
+<link href="dataTables.bootstrap.css" rel="stylesheet" />
+<link href="dataTables.extra.css" rel="stylesheet" />
+<link href="bootstrap.min.css" rel="stylesheet" />
+<link   href='jquery.dataTables.min.css' rel='stylesheet'/>
+<!--<link href="shared/shiny.css" rel="stylesheet" /> -->
+
+<script src="json2-min.js"></script>
+<script src="jquery.min.js"></script>
+<script src="shiny.min.js"></script>
+<script type="text/javascript" src="html5shiv.min.js"></script>
+<script type="text/javascript" src="respond.min.js"></script>
+<script type="text/javascript" src="d3.min.js"></script>
+<script type="text/javascript" src='underscore-min.js'></script>
+<script type="text/javascript" src="d3-scale-chromatic.v1.min.js"></script>
+<script type="text/javascript" src="jquery-3.1.1.min.js"> </script>
+<script type='text/javascript' src='jquery.dataTables.min.js'></script>
+<script type="text/javascript" src="jquery-ui.js"> </script>
+<script type="text/javascript" src="bootstrap.min.js"></script>
+<script type="text/javascript" src="init.js"></script>
+<script type="text/javascript" src="Create2DNetwork.js"> </script>
+<script type="text/javascript" src="LineChart2D.js"></script>
+<script type="text/javascript" src="three.js"></script>
+<script type="text/javascript" src='FirstPersonControls.js'></script>
+<script type="text/javascript" src='TrackballControls.js'></script>
+<script type="text/javascript" src='FlyControls.js'></script>
+<script type="text/javascript" src='FileSaver.js'></script>
+<script type="text/javascript" src='ExportSVGImage.js'></script>
+<script type="text/javascript" src='ExportSVGAnimation.js'></script>
+<script type="text/javascript" src='d3-recorder.js'></script>
+<script type="text/javascript" src="Create3DNetwork.js"></script>
+<script type="text/javascript" src="createHTMLtable.js"></script>
+<script type="text/javascript" src='createBarPlot.js'></script>
+<script type="text/javascript" src='dataTables.deepLink.js'></script>
+<script type="text/javascript" src='d3Animation.js'></script>
+<script type="text/javascript" src='d3AnimationEdges.js'></script>
+<script type="text/javascript" src='d3AnimationNodeEdges.js'></script>
+<script type="text/javascript" src="LZWEncoder.js"></script>
+<script type="text/javascript" src="NeuQuant.js"></script>
+<script type="text/javascript" src="GIFEncoder.js"></script>
+<script type='text/javascript' src='colorbrewer.js'></script>
+<script type='text/javascript' src='exportHistogramImage.js'></script>
+<script type='text/javascript' src='exportLineGraph2D.js'></script>
+<script type='text/javascript' src='export3D.js'></script>
+<script type='text/javascript' src='ExportPathwayList.js'></script>
+<script type='text/javascript' src='createTableDynamicNodes.js'></script>
+<script type= "text/javascript">
+// When the user clicks on div, open the popup
+function myFunction() {
+    var popup = document.getElementById("myPopup");
+    popup.classList.toggle("show");
+}
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+
+        /* Toggle between hiding and showing the active panel */
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    });
+}
+function showUploadDataDiv(){document.getElementById('DivElementUploadData').style.display='block'
+                            document.getElementById('ParentWelcomeScreen').style.display='none'
+                            document.getElementById('DivElementMouseControls').style.display='none'
+                            document.getElementById('DataDownload').style.display='none'
+							 document.getElementById('Tutorialdata').style.display='none'
+
+}
+function showMouseControls(){document.getElementById('DivElementMouseControls').style.display='block'
+                             document.getElementById('ParentWelcomeScreen').style.display='none'
+                             document.getElementById('DivElementUploadData').style.display='none'
+                             document.getElementById('DataDownload').style.display='none'
+							  document.getElementById('Tutorialdata').style.display='none'
+
+}
+function Home(){document.getElementById('ParentWelcomeScreen').style.display='block'
+                                    document.getElementById('DivElementUploadData').style.display='none'
+                                    document.getElementById('DivElementMouseControls').style.display='none'
+                                    document.getElementById('DataDownload').style.display='none'
+									 document.getElementById('Tutorialdata').style.display='none'
+}
+function DownloadData(){document.getElementById('DataDownload').style.display='block'
+                        document.getElementById('ParentWelcomeScreen').style.display='none'
+                        document.getElementById('DivElementUploadData').style.display='none'
+                        document.getElementById('DivElementMouseControls').style.display='none'
+						document.getElementById('Tutorialdata').style.display='none'
+						 
+}
+function TutorialScreen(){document.getElementById('Tutorialdata').style.display='block'
+                        document.getElementById('ParentWelcomeScreen').style.display='none'
+                        document.getElementById('DivElementUploadData').style.display='none'
+                        document.getElementById('DivElementMouseControls').style.display='none'
+						document.getElementById('DataDownload').style.display='none'
+						 
+}
+</script>
+<title>DynOVis: Network visualization tool</title>
+</head>
+<body>
+  <!-- Navigation Bar Menu -->
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <span class="navbar-brand">DynOVis: Network visualization tool</span>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active">
+          <a href="#tab-7438-1" data-toggle="tab" data-value="Home page">Home page</a>
+        </li>
+        <li>
+          <a href="#tab-7438-2" data-toggle="tab" data-value="User Input Data">User Input Data</a>
+        </li>
+		      <li>
+          <a href="#tab-7438-3" data-toggle="tab" data-value="Network visualization">Network visualization</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="tab-content">
+	  <!-- Tab Panel for Home screen -->
+      <div class="tab-pane active" data-value="Home page" id="tab-7438-1">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="well">
+              <h3>Getting started</h3>
+        <a href='#' onclick='Home()'> Home </a> <br />
+			  <a href='#' onclick='TutorialScreen()'> Start with the tutorial data </a><br />
+			  <a href='#' onclick='showUploadDataDiv()'> How to upload your data </a> <br />
+			  <a href='#' onclick=' showMouseControls()'> Mouse controls</a> <br />
+			  <a href='#' onclick='DownloadData()'>Where are my images saved?</a> <br />
+			
+              <!-- Insert tutorial link -->
+
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div id='DivElementMouseControls' style='display:none;'>
+                <h4> Mouse controls</h4>
+                <h5><b>Left mouse button</b></h5>
+                <ul>
+                  <li> single click + hold on node: drag  and place node </li>
+                  <li> single click + node: drag and place whole network</li>
+                  <li> Double click: heighlight node and his neighbors</li>
+                </ul>
+                <h5><b>Right mouse button</b></h5>
+                <ul>
+                  <li>single click: show node information hub</li>
+                </ul>
+                <h5><b> Mouse wheel</b></h5>
+                <ul><li>Zoom in/out</li></ul>
+            </div>
+            <div id='DivElementUploadData' style='display:none;'>
+              <h4>Upload your network data</h4>
+            <p>After navigating to the tab 'User Input Data', you can specify the network file type (figure,panel A):<br> 
+               <ul>
+                 <li>Edge list</li>
+                 <li>Adjacency matrix</li>
+                 <li>Cytoscape sif file</li>
+               </ul>
+             <br>
+             The Cytoscape sif file is the standard output file one can generate in the Cytoscape program and is intended to allow you to visualize your network you've already build in Cytoscape.<br> The adjacency matrix (of dimension MxM) should be of the standard format thus an matrix containing zeros if there is no connection and ones if there is a connection between nodes (figure, panel B).<br> The edge list should be a two column file containing the source node in column 1 and the target node in column 2. (figure, panel C) <br>
+             </p>
+             <h4> Upload the experimental data</h4>
+             <p>
+               The second step is uploading the experimental data from the dose/time/dose-over-time series. These data values are used to color the nodes in the network, for instance to show the log intensity changes of the genes in a gene regulatory network. Each of the different file, whether it is a dose series or time series has a comparable data file structure. The rows in the file correspond to the different nodes in the network and therefore should have the same name. The columns in the file correspond to the dose, time point or Dose X at time point Y (figure, panel D).<br>
+
+As a last option, the user can upload an interaction file, which is a file that will specify which interactions are present at different time points.<br>
+            <img source='www/DataUploadPanel.jpeg' height='200'/>
+             </p>
+             </div>
+            <div id="ParentWelcomeScreen" style='display:block;'>
+            <h4>Welcome at the DynOVis visualization tool for network analysis</h4>
+            <p>
+			DynOVis is designed to capture the dynamic nature of biological data due to different perturbations, such as time or dose series experiments.<br />
+			Integrative visualization can be used to gain more information out of the networks graphs and thereby increase our understanding of the biological data.<br />
+			<br />
+			Here, we have integrated a dynamic visualization approach combined with integrated databases, to add biological context to the network. This includes information about related pathways, associated diseases and general gene information.
+			</p>
+			<p>
+			</p>
+			<p><img src="Graphical abstract.jpg" height='400'/></p>
+			<p><img src="TGX_logo.jpg" height='100' align='right'/></p>
+			
+          </div>
+          <div id='DataDownload' style='display:none;'> 
+            <p>
+              <h4> Where are my images saved to?</h4>
+              By default, your images will be downloaded to the standard folder specified by your browser.<br>
+              In general, this is 'Downloads' folder in your documents directory.<br>
+            </p>
+          </div>
+		  <div id='Tutorialdata' style='display:none;'> 
+            <p>
+              <h4> How to use the tutorial data</h4>
+              DynOVis has two different tutorial data sets that can be viewed in the tool: i) NFkB pathway exposed to acetaminophen (NFkB data set) and ii) biological network of Fibronectin 1 perturbation after primary human hepatocytes have been exposed to Valproic acid.<br>
+			  <br>
+			  
+              To upload the data, just check one of the two boxed (NFkB exposure or VPA exposure) and press the button ‘Upload data’. The second step will be to select the directionality of the network: directed or undirected. For the Tutorial data sets please select ‘directed’. Finally, you can select if you want to map the genes in the network to the internal database of DynOVis. For the NFkB exposure pathway you can select 'map nodes to database' and select 'Entrez ID'. For the tutorial data set of VPA exposure you should select 'gene Name'. To start the visualization press ‘Build network’. <br />
+			  <br>
+			  A short description of the main functions: <br>
+			  <b> Threshold on node degree:</b> If you click on the menu bar, the panel will drop down and three options sliders become visible to select a threshold on the degree for which a node becomes hidden. The drop menu can be closed again by clicking on 'Threshold on node degree' <br>
+			  <b> Show Expression data:</b> This drop down menu contains the different animation options of DynOVis: i) color nodes with expression ii) Edge interaction over time and iii) color node + edge interaction. The animation controls are used to play the animation ('play button'),pause/resume the animation ('pause'button) and to go frame-by-frame through the network ('forward/backward' button).<br>
+			  For the NFkB data set choose the option: color nodes with expression<br>
+			  For the VPA exposure set choose the option: color nodes + edge interaction <br>
+			  <br>
+			  <b> Start analysis of subselection:</b> Before you can run this option, you first have to double click on a node in the network to highlight the node and its first neighbors. After this step, you can press 'start analysis subselection' which will create a 2D line graph of the expression changes over time or dose.<br />
+			  <br>
+			  <b>A complete tutorial which explains all the functions of the tool in more detail can be found <a href='ManualDynovis.pdf' target=_blank">here</a>.</b><br>
+
+            </p>
+          </div>
+        </div>
+      </div>
+  </div>
+
+		<div class="tab-pane" data-value="User Input Data" id="tab-7438-2">
+        <div class="container-fluid">
+          <div class="row">
+              <div class="col-sm-4">
+                  <div class="well">
+                    <h4>Step 1:Upload files</h4>
+					<h5> Tutorial data<h5>
+					<div class="form-group shiny-input-container">
+                    <div class="checkbox">
+                    <label>
+                      <input id="NFkBexposure" type="checkbox"/>
+                      <span>NFkB exposure</span>
+                    </label>
+                  </div>
+                </div>
+					  <div class="form-group shiny-input-container">
+                  <div class="checkbox">
+                    <label>
+                      <input id="VPAexposure" type="checkbox"/>
+                      <span>VPA exposure</span>
+                    </label>
+                  </div>
+                </div>
+                    <h5>Select network type</h5>
+                <div class="form-group shiny-input-container">
+                  <div class="checkbox">
+                    <label>
+                      <input id="EdgeList" type="checkbox"/>
+                      <span>Edge list</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group shiny-input-container">
+                  <div class="checkbox">
+                    <label>
+                      <input id="AdjMatrix" type="checkbox"/>
+                      <span>Adjacancy matrix</span>
+                    </label>
+                  </div>
+                </div>
+                  <div class="form-group shiny-input-container">
+                    <div class="checkbox">
+                      <label>
+                        <input id="Cytoscape" type="checkbox"/>
+                        <span>Cytoscape file</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div data-display-if="input.EdgeList==1||input.AdjMatrix==1||input.Cytoscape==1">
+                    <div class="form-group shiny-input-container">
+                      <label>Choose edgelist file</label>
+                        <div class="input-group">
+                        <label class="input-group-btn">
+                          <span class="btn btn-default btn-file">
+                            Browse...
+                            <input id="NetworkFile" name="NetworkFile" type="file" style="display: none;" accept="multiple"/>
+                          </span>
+                        </label>
+                      <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+                    </div>
+                    <div id="NetworkFile_progress" class="progress progress-striped active shiny-file-input-progress">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+
+                                <h4>Data type</h4>
+                <div class="form-group shiny-input-container">
+                  <div class="checkbox">
+                    <label>
+                      <input id="Dose" type="checkbox"/>
+                      <span>Dose experiments</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group shiny-input-container">
+                  <div class="checkbox">
+                    <label>
+                      <input id="Time" type="checkbox"/>
+                      <span>Time series experiments</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group shiny-input-container">
+                  <div class="checkbox">
+                    <label>
+                      <input id="DoseTime" type="checkbox"/>
+                      <span>Dose with Time series</span>
+                    </label>
+                  </div>
+                </div>
+                 <div class="form-group shiny-input-container">
+                  <div class="checkbox">
+                    <label>
+                      <input id="EdgeTime" type="checkbox"/>
+                      <span>Interactions</span>
+                    </label>
+                  </div>
+                </div>
+                <div data-display-if="input.Dose==1">
+                  <div class="form-group shiny-input-container">
+                    <label>Choose Dose series file(s)</label>
+                    <div class="input-group">
+                      <label class="input-group-btn">
+                        <span class="btn btn-default btn-file">
+                          Browse...
+                          <input id="DoseUpload" name="DoseUpload" type="file" style="display: none;" multiple="multiple"/>
+                        </span>
+                      </label>
+                      <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+                    </div>
+                    <div id="DoseUpload_progress" class="progress progress-striped active shiny-file-input-progress">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                <div data-display-if="input.Time==1">
+                  <div class="form-group shiny-input-container">
+                    <label>Choose Time series file(s)</label>
+                    <div class="input-group">
+                      <label class="input-group-btn">
+                        <span class="btn btn-default btn-file">
+                          Browse...
+                          <input id="TimeUpload" name="TimeUpload" type="file" style="display: none;" multiple="multiple"/>
+                        </span>
+                      </label>
+                      <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+                    </div>
+                    <div id="TimeUpload_progress" class="progress progress-striped active shiny-file-input-progress">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                <div data-display-if="input.DoseTime==1">
+                  <div class="form-group shiny-input-container">
+                    <label>Choose Dose + Time series file(s)</label>
+                    <div class="input-group">
+                      <label class="input-group-btn">
+                        <span class="btn btn-default btn-file">
+                          Browse...
+                          <input id="DoseTimeUpload" name="DoseTimeUpload" type="file" style="display: none;" multiple="multiple"/>
+                        </span>
+                      </label>
+                      <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+                    </div>
+                    <div id="DoseTimeUpload_progress" class="progress progress-striped active shiny-file-input-progress">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                   <div data-display-if="input.EdgeTime==1">
+                  <div class="form-group shiny-input-container">
+                    <label>Choose interaction series file(s)</label>
+                    <div class="input-group">
+                      <label class="input-group-btn">
+                        <span class="btn btn-default btn-file">
+                          Browse...
+                          <input id="EdgeInteractionUpload" name="DoseTimeUpload" type="file" style="display: none;" multiple="multiple"/>
+                        </span>
+                      </label>
+                      <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>
+                    </div>
+                    <div id="DoseTimeUpload_progress" class="progress progress-striped active shiny-file-input-progress">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-default action-button" id='StartAnalysis' onclick='showNetworkStyle()'>Upload data</button>
+                </div> <!-- well of the panel -->
+				</div> <!-- close colum 1: data upload part -->
+				<div class='row'>
+				<div id='NetworkStyle' class="col-sm-4">
+					<!-- open colum 3: Set the settings for network creation -->
+					<div class="well">
+					<!-- Container for the direction network checkbox -->
+					<div class="form-group shiny-input-container">
+					  <div class="form-group shiny-input-container">
+					    <h4>Step 2a: Directed/undirected network</h4>
+					  <div class="form-group shiny-input-container"  style="padding-left: 2em;"> <br />
+						  <img src="DirectedNetworkPicture.png" alt="Directed" height="20" width="60">
+						  <label>
+						  <input id="Directed" name="Directed" type="checkbox">
+						  <span>Directed</span>
+						  </label>
+					  </div><br />
+				  	<div class="form-group shiny-input-container"  style="padding-left: 2em;"><br />
+					  	 <img src="UndirectedNetworkPicture.png" alt="Directed" height="20" width="60"> 
+						<label>
+						  <input id="Undirected" name="Undirected" type="checkbox" checked>
+						  <span>Undirected</span>
+						  </label>
+					  </div>
+					</div>
+					<br />
+					<button id='DataMapOptionsChosen' class='btn btn-default action-button' onclick='showMapNetworkTodata()'>Set network characteristics</button>  
+	
+				    </div>
+					</div>
+					</div>
+				<div class="col-sm-4" id='MapNetworkToData'> <!-- open colum 2: Mapping options -->
+                <div class="well" display='none'>
+					<!-- Container for the mapping checkbox -->
+					<div class="form-group shiny-input-container">
+					  <h4> Step 2b: Connect network to database</h4>
+					  <h5> Select organism:</h5>
+					  <b> Selection</b>
+					   			<select id='inputOrganism'>
+							    <option value='Homo_Sapiens'>Homo Sapiens</option>
+							    <option value='Mus_Musculus'>Mus Musculus</option>
+							    <option value='Rattus_Norvegicus'>Rattus Norvegicus</option>
+		              </select>
+						<h4> Select gene identifier</h4>
+					   <div class="checkbox">
+						    <label>
+						    <input id="MapGenesToDB" name="MapGenesToDB" type="checkbox" />
+						    <span>Map nodes to database</span>
+						    </label>
+					    </div>
+						<div data-display-if="input.MapGenesToDB==1">
+					   <div class="checkbox" style="padding-left: 2em;">
+						    <label>
+                  <input id="GeneName" name="GeneName" type="checkbox">
+                  <span>Gene Name</span>
+						    </label>
+					   </div>
+					   <div class="checkbox" style="padding-left: 2em;">
+						    <label>
+                        <input id="EntrezID" name="EntrezID" type="checkbox" checked>
+                         <span>Entrez ID</span>
+						    </label>
+					    </div>
+						</div>
+						<button type="button" class="btn btn-default action-button" id='BuildNetwork' onclick='showLoadingButton()'>Build network</button>
+					    
+					</div>
+					</div>
+					</div>
+
+	       </div>
+		   </div>
+      </div>
+      <div id='buildingNetwork' style='display:none;'><text><b>building network</b></text></div>
+	  <div id="loader" style="display:none;"></div>
+	  <div id='networkBuildFinished' style='display:none;'><text><b>Network finished<br /> proceed to network visualization tab</b></text></div>
+      </div>
+      <script>
+      document.getElementById('MapNetworkToData').style.display='none'
+      document.getElementById('NetworkStyle').style.display='none'
+      function showMapNetworkTodata(){document.getElementById('MapNetworkToData').style.display='block'}
+      function showNetworkStyle(){document.getElementById('NetworkStyle').style.display='block'}
+      function showLoadingButton(){document.getElementById('buildingNetwork').style.display='block';document.getElementById('loader').style.display='block'}
+      </script>
+      <!-- tab content of the network visualization -->
+      <div class="tab-pane" data-value="Network visualization" id="tab-7438-3" >
+	    	<div class="container-fluid">
+			    <div class="row">
+			    	<div class="col-sm-4">
+							<div class="w3-container" style="position:relative"> 
+					        <button id='SettingsOptions' title='Set network options' type="button" class="btn btn-default action-button" >
+								<img src='SettingsButton.png' alt='Settings' />
+						    </button>
+							<button id='ColorOptions' type="button" title='Set style colors' class="btn btn-default action-button" >
+								<img src='ColorOptions.png' alt='Color Options' />
+							</button>
+							<hr>
+						     <div class='searchwrapper'>
+							    <input type="searchbox" class="search" id="searchbar" placeholder="Search nodes" />
+							    <button id='SearchButton' title='Search nodes in network' type='button' class='btn btn-default action-button'>
+								<img src='SearchButton.png' alt='Search Button' />
+							</button>
+						      </div>
+							</div>
+							<hr>
+				<div class="panel-group" id="accordion">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+						<h5 class="panel-title">
+						   <a data-toggle="collapse"  href="#collapse1">Threshold on node degree </a>
+						</h5>
+					</div>
+      			<div id="collapse1" class="panel-collapse collapse">
+					<div class="panel-body">
+						      <b> Threshold on node degree </b>
+						      <form>
+						         <b>Threshold degree </b><output name="nRadiusOutputName" id="nRadiusOutput">0</output><br>
+						      <input type="range" value="0" min="0" max="50" id="nRadius" oninput='nRadiusOutput.value=nRadius.value' class="w3-bar-item w3-button" > 
+						      </form>
+						      <form>
+					  	    <b> Threshold on in-degree</b><br>
+					  	       <b>Threshold indegree </b><output name="inDegreeOutputName" id="inDegreeOutput" >0</output><br>
+						      <input type='range' value='0' min='0' max='50' id='inDegree'  oninput='inDegreeOutput.value=inDegree.value' class="w3-bar-item w3-button" > <br>
+						      </form>
+						      <form>
+						      <b> Treshold on out-degree</b><output name="outDegreeOutputName" id="outDegreeOutput" >0</output><br>
+						      <input type='range' value='0' min='0' max='50' id='outDegree' oninput='outDegreeOutput.value=outDegree.value' class="w3-bar-item w3-button"> <br>
+						      </form>
+						      <br />
+						    <b> Set Node size:</b>
+						    <select id='OptionSetNodeSize'>
+							   <option value='Off'>Off</option>
+							   <option value='Degree'>Degree</option>
+							   <option value='inDegree'>inDegree</option>
+							   <option value='outDegree'>outDegree</option>
+						    </select></div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse2">Show expression data</a>
+						</h4>
+					</div>
+				<div id="collapse2" class="panel-collapse collapse">
+				<div class="panel-body">
+					<b> Choose animation type </b><br />
+				    <form action=''>
+					<input type='radio' name='DataControlVideo' value='ColorNodesTime' checked=true>Color nodes with expression <br />
+						       <input type='radio' name='DataControlVideo' value='EdgeInteractionTime' >Edge interaction over time <br />
+						       <input type='radio' name='DataControlVideo' value='NodeEdgeTime'> Color node + edge interaction   <br />
+					<text> Animation control </text><br />
+					</form>
+					<button id='playButton' class='PlayerControls' >play</button>
+					<button id='pauseButton' class='PlayerControls' >pause</button>
+					<button id='forwardButton' class='PlayerControls'>forward</button>
+					<button id='backwardButton' class='PlayerControls'>backward</button><br />
+				    <b> Loop Animation ?</b><br />
+					<form action=''>
+						<input type='radio' id='LoopAnimation' name='LoopAnimation' value='LoopedAnimation'>Loop animation
+					</form>
+					<b> Legend node expression<b><br/>
+					<div id='ColorBar' width='160px' height='30px'></div>
+					<b> Time/Dose point<b><br />
+					<div id='TimeStep2D'></div>
+					</div> 
+			</div> 
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse3">Network analysis/ 3D network</a>
+						</h4>
+					</div>
+				<div id="collapse3" class="panel-collapse collapse">
+					<div class="panel-body">						    
+						<b> Subselection analysis</b><br />
+						<button id="Create2DlineGraph" class='btn btn-default action-button'> start analysis subselection </button><br/>
+						<b> Generate 3D network</b><br />
+						<button id='Generate3DNetwork' class='btn btn-default action-button'>Generate 3D network</button><br />
+						<b> Pathway histogram</b><br />
+						 <button id='PathwayHist' type="button" class="btn btn-default action-button">Pathway histogram </button><br />
+						<b> identify HUB nodes </b><br />
+						<button id='HUBNodes' type="button" class="btn btn-default action-button" > HUB nodes </button><br />
+						<b> Dynamic HUB nodes </b><br />
+						<button id='HUBDynamic' type="button" class="btn btn-default action-button" > Dynamic HUB  </button>
+						</div>
+				</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+						<a data-toggle="collapse" href="#collapse4">Export image/animation</a>
+						</h4>
+				<div id="collapse4" class="panel-collapse collapse">
+						<button id='ExportImage' class='btn btn-default action-button'> export svg as image </button>
+						<button id='ExportAnimation' class='btn btn-default action-button'> export animation </button>
+					</div>
+					</div>
+					</div>
+    
+					</div> 
+					</div>
+					  <div class="col-sm-8">
+						  <div id="network-area"></div>
+				    </div>
+				</div>
+				 </div>
+			</div>
+
+	  </div>
+  </div>
+  	<div class="modal fade" id="2DLineGraphModal" role="dialog">
+					  <div class="modal-dialog modal-lg">
+      				<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<text> 2D graph of log values</text>
+								
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+							  <button id='ExportThisButton'type='button' class='close'>Export image</button>
+								<div id='PlotArea'></div>
+							</div>
+						</div>
+					</div>
+				</div>
+    
+    		<div class="modal fade" id="PathwayPlot" role="dialog">
+					  <div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<text> Pathway histogram</text>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+							  <button id='ExportPathwayList' type='button' class='close' style="marging:5px;">Export List Pathways </button>
+							  <button id='ExportPathway'type='button' class='close'>Export image</button>
+								<div id='PlotPathwayBars' width='100%'></div>
+							</div>
+						</div>
+					</div>
+		</div>
+				
+    <div class="modal fade" id="3DNetworkVisualizationModal" role="dialog">
+		<div class='modal-dialog modal-lg'>
+        <div class="modal-content">
+          <div class="modal-header" >
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
+		   <div class="tab-pane" data-value="3D visualization" id="tab-7438-5" >
+             <div class="container-fluid">
+              <div class='button-panel'>
+              <button id='TimeAnimation' class='toggle-data-btn'>Time animation</button>
+              <button id='PauseAnimation' class='toggle-data-btn'>Pause</button>
+              <button id='ForwardFrame' class='toggle-data-btn'>Forward</button>
+              <button id='BackwardFrame' class='toggle-data-btn'>Backward</button>
+              <div id='TimeStep'></div>
+              </div>
+            </div>
+			</div>
+          </div>
+          <div class="modal-body">
+ 			      <div id='3Dnetworkvisualization' width='1500'  height='700'></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+	<div class='modal fade' id= "ExportImageModal" role="dialog">
+		  	  <div class="modal-dialog modal-lg">
+
+						<div class="modal-content">
+							<div class="modal-header">
+								<text> Export image</text>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+  				    <div class="form-group">
+                <label for="input-fileName">File name</label>
+                <input type="text" class="form-control" id="input-fileNameImage" value="Network" placeholder="Enter file name">
+              </div>
+              <button id='SaveImage'> Save </button>
+							</div>
+						</div>
+					</div>
+		</div>
+
+		
+		    <div class='modal fade' id= "ExportHistogram" role="dialog">
+		  	  <div class="modal-dialog modal-lg">
+
+						<div class="modal-content">
+							<div class="modal-header">
+								<text> Export image</text>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+  				    <div class="form-group">
+                <label for="input-fileName">File name</label>
+                <input type="text" class="form-control" id="input-fileIHistogram" value="Histogram" placeholder="Enter file name">
+              </div>
+              <button id='ExportPathwayFile'> Save Graph </button>
+							</div>
+						</div>
+					</div>
+		</div>
+		
+		    <div class='modal fade' id="ExportLineGraph" role="dialog">
+		  	  <div class="modal-dialog modal-lg">
+
+						<div class="modal-content">
+							<div class="modal-header">
+								<text> Export line graph</text>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+  				    <div class="form-group">
+                <label for="input-fileName">File name</label>
+                <input type="text" class="form-control" id="input-fileLineGraph" value="LineGraph" placeholder="Enter file name">
+              </div>
+              <button id='ExportLineGraphButton'> Save Graph </button>
+							</div>
+						</div>
+					</div>
+		</div>
+		
+		<div class='modal fade' id='ExportAnimationModal' role= dialog >
+		  <div class='modal-dialog modal-lg'>
+		    <div class='modal-content'>
+		      <div class='modal-header'>
+		        <text> Export animation gif</text>
+		        <button type='button' class='close' data-dismiss='modal'>&times;</button>
+		      </div>
+		      <div class='modal-body'>
+		        <div class= 'form-group'>
+		           <label for='input-fileName'>File name</label>
+		           <input type='text' class='form-control' id='input-fileNameAnimation' value='NetworkAnimation' placeholder='Enter file Name'>
+
+		        </div>
+		        <button id='SaveAnimation' class='btn btn-default action-button'>Save</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+
+		<div class='modal fade' id= "DataAnalysisHUB" role="dialog">
+		  	 <div class="modal-dialog modal-lg">
+
+						<div class="modal-content">
+							<div class="modal-header">
+								<text> Export image</text>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+  				    <div class="form-group">
+                <table id='DataTableHUB' class='display' width='100%'>
+                  <thead>
+                    <tr>
+                      <th>GeneID</th>
+                      <th>TotalDegree</th>
+                      <th>Innerdegree</th>
+                      <th>OuterDegree</th>
+                    </tr>
+                  </thead>
+                </table>
+							</div>
+						</div>
+					</div>
+		  </div>
+		</div>
+		
+		<div class='modal fade' id= "DataAnalysisHUBDynamic" role="dialog">
+		  	 <div class="modal-dialog modal-lg">
+
+						<div class="modal-content">
+							<div class="modal-header">
+								<text> Export image</text>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+  				    <div class="form-group">
+                <table id='DataTableHUBDynamic' class='display' width='100%'>
+                  <thead>
+                    <tr>
+                      <th>GeneID</th>
+                      <th>Time point 1</th>
+                      <th>Time point 2</th>
+                      <th>Time point 3</th>
+					  <th>Time point 4</th>
+                    </tr>
+                  </thead>
+                </table>
+							</div>
+						</div>
+					</div>
+		  </div>
+		</div>
+
+		
+		<div class='modal fade' id='NetworkSettingsModal' role='dialog'>
+			<div class='Modal-dialog modal-styleoptions'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<text> Network style settings </text>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class='modal-body'>
+						<table>
+						<tr>
+						<td><span>node size:</span></td>
+						<td><input id="NodeSizeNumber" type="number" value='4' width='49%'  class='InputField'></td>
+						</tr>
+						<tr>
+						<td><span>Line style:</span><
+						<td><select id='LineStyle'>
+							<option value='Solid'>Solid line</option>
+							<option value='Dashed'>Dashed line</option>
+							<select>
+						</td>
+						</tr>
+						<tr>
+						<tr>
+						<td><span> link stroke color: </span></td>
+						<td><select id='LinkStrokeColor'>
+							<option value='Grey'>Grey</option>
+							<option value='Black'>Black</option>
+							<option value='Red'>Red</option>
+							<option value='Blue'>Blue</option>
+							<option value='Green'>Green</option>
+							<option value='Purple'>Purple</option>
+							<option value='White'>White</option>
+						</select></td>
+						</tr>
+						</table>
+						<button id='UploadChangesStyle'> Apply changes </button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+				<div class='modal fade' id='ColorSettingsModal' role='dialog'>
+			<div class='Modal-dialog modal-styleoptions'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<text> Color settings </text>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class='modal-body'>
+					<table>
+					<tr>
+					<td><span>Node colorscale</span></td>
+					<td>
+						<select id='NodeExpressionColorStyle'>
+						<option value='RedGreenScale'>Red-Green scale</option>
+						<option value='RedBlueScale'>Red-Blue scale</option>
+						<option value='BrownGreenScale'> Brown-Green scale </option>
+						<option value='PurpleOrangeScale'> Purple-Orange scale </option>
+						<option value='SpectralScale'> Spectral scale </option>
+                        <option value="RNASequencing"> RNAseq data</option>
+						</select>
+					</td>
+					</tr>
+					<tr>
+					    <td><span> Background color: </span></td> 
+					  	<td> <select id='BackgroundColorOptions'>
+							  <option value='White'>White</option>
+							  <option value='Black'>Black</option>
+						</select></td>
+					</tr>
+					</table>
+					<button id='UploadChangesStyle2'> Apply changes </button>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>
+
