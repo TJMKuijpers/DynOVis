@@ -7,7 +7,7 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 		PathwayToPlot=PathwayToPlot
 		BGcolor='white'
 		LinkStrokeCol='black'
-		LinkDistanceSize=25
+		LinkDistanceSize=50
 		NodeSize=4
 		RangePoint=RangePoint
 		// Build the network
@@ -15,9 +15,12 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 		console.log(dataExpr)
 
 		var widthSVG=1250;
-		var heightSVG=1000;	
-
-		var svg=d3.select("#network-area") 
+		var heightSVG=1000;
+		// This one is for jejunum
+		//var namesToSelect=['diarrhea','apoptosis_crypts-jejunum','villus_atrophy-jejunum','pc_release_granullates-jejunum', 'mitotic_figures_decreased-jejunum','infiltrate_granulocytic-jejunum','crypt_atrophy-jejunum','decreased_goblet_cells-jejunum','citrulline-plasma','citrulline-jejunum','caspase3-jejunum','ki67-jejunum','villus_height-jejunum']
+		// This one is for colon
+	    var namesToSelect=['diarrhea','apoptosis_crypts-colon','infiltrate_granulocytic-colon','decreased_goblet_cells-colon','reactive_crypt_hyperplasia-colon','mononuclear_cell_infiltrate-colon','dilated_crypts_mucus-colon','atrophy_crypts_mucosa-colon','nuclei_colon','caspase3-colon','ki67-colon','crypt_depth-colon','crypts_mm-colon']
+		var svg=d3.select("#network-area")
 			.append("svg") 
 			.attr("width",widthSVG) 
 			.attr("height",heightSVG)
@@ -48,7 +51,7 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 		// d3js force simulation for network visualization
 	var simulation=d3.forceSimulation()
 				   .force('link',d3.forceLink().id(function(d) { return d.id; }).distance(LinkDistanceSize))
-				   .force('charge',d3.forceManyBody())
+				   .force('charge',d3.forceManyBody().strength(-50))
 				   .force('center',d3.forceCenter(widthSVG/2,heightSVG/2))
 				   .force('x',d3.forceX(10))
 				   .force('y',d3.forceY(10));
@@ -63,30 +66,74 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 			  .attr('InteractionLabel',function(d,i){return 'interaction'+i})
 			  .attr('stroke-opacity',0.7)
 			  .attr('marker-end','url(#marker)');
-			  
-	var node=svg.append("g")
-			 .attr("class","nodes")
-			 .selectAll("circle")
-			 .data(dataset.nodes)
-			 .enter()
-			 .append('circle')
-			 .attr('r',document.getElementById('NodeSizeNumber').value)
+
+	// add a class to the node based if they are in our list of variables to select for phenotype
+	var node = svg.append("g")
+		.attr("class", "nodes")
+		.selectAll("g")
+		.data(dataset.nodes)
+		.enter().append("g")
+		.attr('class',function(d,i){
+			if(namesToSelect.includes(dataset.nodes[i].id)){
+				return "PhenoType"
+			}else{
+				return 'Gene' ;
+			}
+		})
+
+	var circles= d3.selectAll('.Gene').append("circle")
+		.attr('r',document.getElementById('NodeSizeNumber').value)
+		.attr('fill','lightgrey')
+		.attr('stroke-width',0.8);
+
+	var rect=d3.selectAll('.PhenoType').append('rect')
+		.attr("width", 15)
+		.attr("height", 15)
+		.attr('fill','lightgrey')
+		.attr('stroke','black')
+		.attr('stroke-width',1);
+
+	/*
+	var circles = node.append("circle")
+			 .attr('r',function(d,i){
+			 	if(namesToSelect.includes(dataset.nodes[i].id)){
+			 		console.log('found');
+			 		 return 15;
+				}else{
+					return document.getElementById('NodeSizeNumber').value;
+				}
+			 })
 			 .attr('name', function(d,i){ return dataset.nodes[i].id})
-			 .attr('class','node')
 			 .attr("fill", 'lightgrey')
-			 .attr('stroke-width',0.5)
+			 .attr('stroke-width',function(d,i){
+				 if(namesToSelect.includes(dataset.nodes[i].id)){
+					 console.log('found');
+					 return 2;
+				 }else{
+					 return 0.8 ;
+				 }
+			 })
 			 .attr('stroke','grey')
 			 .attr('ConnectClick','false')
 			 .call(d3.drag()
 				.on('start',dragstarted)
 				.on('drag',dragged)
 				.on('end',dragended))
-			 .on('dblclick', connectedNodes);
-				
+			 	.on('dblclick', connectedNodes);
+	*/
+	var lables = node.append("text").attr("fill", "Black").attr('stroke','White').attr('stroke-width','0.2px').style("font", "bold 20px Arial")
+		.text(function(d,i) {
+			if(namesToSelect.includes(dataset.nodes[i].id)){
+				return dataset.nodes[i].id;
+			}else{
+				return ''
+			}
+		})
+		.attr('x', 25)
+		.attr('y', 3);
+
 	node.append("title")
-		.text(function(d) {
-			  return d.text
-			});
+		.text(function(d) { return d.id;; });
 
 	simulation
 		.nodes(dataset.nodes)
@@ -103,9 +150,10 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 			.attr("x2", function(d) { return d.target.x; })
 			.attr("y2", function(d) { return d.target.y; });
 
-		node
-			.attr("cx", function(d) { return d.x; })
-			.attr("cy", function(d) { return d.y; })
+			node
+				.attr("transform", function(d) {
+					return "translate(" + d.x + "," + d.y + ")";
+				})
 			};
 
 	/*function dragstarted(d) {
@@ -469,12 +517,13 @@ $(document).ready(function(){
 
 function createColorLegendBar(){
 	if(dataExpr.length!=0){
-	 var ColorForBar=getColor()    
-     var ColorSVG=d3.select('#ColorBar').append('svg').attr('width',200).attr('height',50)
-	 var legend = ColorSVG.append('g')
+	 var ColorForBar=getColor();
+	 console.log(ColorForBar.domain());
+     var ColorSVG=d3.select('#ColorBar').append('svg').attr('width',400).attr('height',50);
+	 var legend = ColorSVG.append('g');
 	 var x = d3.scaleLinear()
-			   .domain([-1*RangePoint, RangePoint])
-               .range([0, 150]);
+			   .domain([0, 15])
+              .range([0, 350]);
 
 	var xAxis = d3.axisBottom(x)
                   .tickSize(13)
@@ -490,7 +539,7 @@ function createColorLegendBar(){
     .attr("stop-color", function(d) { return d; });
 
 	legend.append("rect")
-	.attr("width", 150)
+	.attr("width", 350)
 	.attr("height", 20)
 	.attr("transform", "translate(8,0)")
 	.style("fill", "url(#linear-gradient)");
@@ -546,15 +595,17 @@ function getColor(){
 		var color=d3.scaleLinear().domain([-1*RangePoint,-0.75*RangePoint,-0.5*RangePoint,-0.25*RangePoint,0,0.25*RangePoint,0.5*RangePoint,0.75*RangePoint,RangePoint]).range(colorrange)
 		}
 	if(ColorScaleInput == 'RNASequencing'){
-		var colorsHex = [d3.rgb("#FF0000"),d3.rgb("#FF1100"),d3.rgb("#FF2300"),d3.rgb("#FF3400"),d3.rgb("#FF4600"),d3.rgb("#FF5700"),d3.rgb("#FF6900"),d3.rgb("#FF7B00"),
+		var colorsHex = [d3.rgb('#a9a9a9'),d3.rgb('#b2beb5'),d3.rgb('#e2e5de'),d3.rgb('#f5f5f5'),d3.rgb('#ffffff'),d3.rgb("#FF0000"),d3.rgb("#FF1100"),d3.rgb("#FF2300"),d3.rgb("#FF3400"),d3.rgb("#FF4600"),d3.rgb("#FF5700"),d3.rgb("#FF6900"),d3.rgb("#FF7B00"),
 			d3.rgb("#FF8C00"),d3.rgb("#FF9E00"),d3.rgb("#FFAF00"),d3.rgb("#FFC100"),d3.rgb("#FFD300"),d3.rgb("#FFE400"),d3.rgb("#FFF600"),d3.rgb("#F7FF00"),
 			d3.rgb("#E5FF00"),d3.rgb("#D4FF00"),d3.rgb("#C2FF00"),d3.rgb("#B0FF00"),d3.rgb("#9FFF00"),d3.rgb("#8DFF00"),d3.rgb("#7CFF00"),d3.rgb("#6AFF00"),d3.rgb("#58FF00"),d3.rgb("#47FF00")
-			,d3.rgb("#35FF00"),d3.rgb("#24FF00"),d3.rgb("#12FF00"),d3.rgb("#00FF00")];
-		var color = d3.scaleLinear().domain([3,5,5.5,5.75,6,6.25,6.5,6.75,7,7.5,8,8.5,9,9.5,10,11,12,13,14,15])
-			.interpolate(d3.interpolateHcl)
+			,d3.rgb("#35FF00"),d3.rgb("#24FF00"),d3.rgb("#12FF00"),d3.rgb("#00FF00"),d3.rgb('#8C8783'),d3.rgb('#716761'),d3.rgb('#5A4D44'),d3.rgb('#A17B66'),d3.rgb('#CAAEA2'),d3.rgb('#65432'),d3.rgb('#51361a')];
+
+		var color = d3.scaleLinear().domain([0,0.5,1,2,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,30,35,40,140,160,180,200])
 			.range(colorsHex);
 
 	}
+	// domain for jejunum [0,0.5,1,2,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,500,1000,2000,5000,6000,7000,8000]
+
 	return color;}
 
 var counter=0;
