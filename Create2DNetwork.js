@@ -84,14 +84,26 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 	var circles= d3.selectAll('.Gene').append("circle")
 		.attr('r',document.getElementById('NodeSizeNumber').value)
 		.attr('fill','lightgrey')
-		.attr('stroke-width',0.8);
+		.attr('stroke-width',0.8)
+		.attr('ConnectClick','false')
+		.call(d3.drag()
+			.on('start',dragstarted)
+			.on('drag',dragged)
+			.on('end',dragended))
+		.on('dblclick', connectedNodes);
 
 	var rect=d3.selectAll('.PhenoType').append('rect')
 		.attr("width", 15)
 		.attr("height", 15)
 		.attr('fill','lightgrey')
 		.attr('stroke','black')
-		.attr('stroke-width',1);
+		.attr('stroke-width',1)
+		.attr('ConnectClick','false')
+		.call(d3.drag()
+			.on('start',dragstarted)
+			.on('drag',dragged)
+			.on('end',dragended))
+		.on('dblclick', connectedNodes);
 
 	/*
 	var circles = node.append("circle")
