@@ -69,7 +69,7 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 
 	// add a class to the node based if they are in our list of variables to select for phenotype
 	var node = svg.append("g")
-		.attr("class", "nodes")
+		.attr("class", "node")
 		.selectAll("g")
 		.data(dataset.nodes)
 		.enter().append("g")
@@ -80,7 +80,7 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 				return 'Gene' ;
 			}
 		})
-
+	/*
 	var circles= d3.selectAll('.Gene').append("circle")
 		.attr('r',document.getElementById('NodeSizeNumber').value)
 		.attr('fill','lightgrey')
@@ -105,7 +105,7 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 			.on('end',dragended))
 		.on('dblclick', connectedNodes);
 
-	/*
+	*/
 	var circles = node.append("circle")
 			 .attr('r',function(d,i){
 			 	if(namesToSelect.includes(dataset.nodes[i].id)){
@@ -132,7 +132,7 @@ function Create2DNetwork(DataModel,DataExpr,EdgeInfo,NodeDB,PathwayToPlot,RangeP
 				.on('drag',dragged)
 				.on('end',dragended))
 			 	.on('dblclick', connectedNodes);
-	*/
+
 	var lables = node.append("text").attr("fill", "Black").attr('stroke','White').attr('stroke-width','0.2px').style("font", "bold 20px Arial")
 		.text(function(d,i) {
 			if(namesToSelect.includes(dataset.nodes[i].id)){
@@ -563,10 +563,12 @@ function createColorLegendBar(){
 function getNodeMap(position,colorScheme){
     NodeData=dataExpr.ExprValue	
 	var nodeMap=[];
-	for(index=0;index<d3.selectAll('.node')._groups[0].length;index++){
-		    indexOfNodeInData=dataExpr.GeneID.indexOf(d3.selectAll('.node')._groups[0][index].attributes.name.value)
+	for(index=0;index<d3.selectAll('circle')._groups[0].length;index++){
+		    indexOfNodeInData=dataExpr.GeneID.indexOf(d3.selectAll('circle')._groups[0][index].attributes.name.value)
 			nodeMap[index]=colorScheme(NodeData[indexOfNodeInData][Object.keys(NodeData[indexOfNodeInData])[position]])
 			}
+			console.log('dit is de nodeMap')
+			console.log(nodeMap)
 	return nodeMap
 	}
 	
@@ -607,13 +609,12 @@ function getColor(){
 		var color=d3.scaleLinear().domain([-1*RangePoint,-0.75*RangePoint,-0.5*RangePoint,-0.25*RangePoint,0,0.25*RangePoint,0.5*RangePoint,0.75*RangePoint,RangePoint]).range(colorrange)
 		}
 	if(ColorScaleInput == 'RNASequencing'){
-		var colorsHex = [d3.rgb('#a9a9a9'),d3.rgb('#b2beb5'),d3.rgb('#e2e5de'),d3.rgb('#f5f5f5'),d3.rgb('#ffffff'),d3.rgb("#FF0000"),d3.rgb("#FF1100"),d3.rgb("#FF2300"),d3.rgb("#FF3400"),d3.rgb("#FF4600"),d3.rgb("#FF5700"),d3.rgb("#FF6900"),d3.rgb("#FF7B00"),
+		var colorsHex = [d3.rgb('#4d004b'),d3.rgb('#810f7c'),d3.rgb('#88419d'),d3.rgb('#8c6bb1'),d3.rgb('#8c96c6'),d3.rgb('#9ebcda'),d3.rgb('#bfd3e6'),d3.rgb('#e0ecf4'),d3.rgb('#f7fcfd'),d3.rgb("#FF0000"),d3.rgb("#FF1100"),d3.rgb("#FF2300"),d3.rgb("#FF3400"),d3.rgb("#FF4600"),d3.rgb("#FF5700"),d3.rgb("#FF6900"),d3.rgb("#FF7B00"),
 			d3.rgb("#FF8C00"),d3.rgb("#FF9E00"),d3.rgb("#FFAF00"),d3.rgb("#FFC100"),d3.rgb("#FFD300"),d3.rgb("#FFE400"),d3.rgb("#FFF600"),d3.rgb("#F7FF00"),
 			d3.rgb("#E5FF00"),d3.rgb("#D4FF00"),d3.rgb("#C2FF00"),d3.rgb("#B0FF00"),d3.rgb("#9FFF00"),d3.rgb("#8DFF00"),d3.rgb("#7CFF00"),d3.rgb("#6AFF00"),d3.rgb("#58FF00"),d3.rgb("#47FF00")
-			,d3.rgb("#35FF00"),d3.rgb("#24FF00"),d3.rgb("#12FF00"),d3.rgb("#00FF00"),d3.rgb('#8C8783'),d3.rgb('#716761'),d3.rgb('#5A4D44'),d3.rgb('#A17B66'),d3.rgb('#CAAEA2'),d3.rgb('#65432'),d3.rgb('#51361a')];
+			,d3.rgb("#35FF00"),d3.rgb("#24FF00"),d3.rgb("#12FF00"),d3.rgb("#00FF00"),d3.rgb('#8C8783'),d3.rgb('#716761'),d3.rgb('#5A4D44'),d3.rgb('#A17B66'),d3.rgb('#CAAEA2'),d3.rgb('#654320'),d3.rgb('#51361a')];
 
-		var color = d3.scaleLinear().domain([0,0.5,1,2,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,30,35,40,140,160,180,200])
-			.range(colorsHex);
+		var color = d3.scaleLinear().domain([0,0.33,0.66,0.99,1.22,1.5,2,2.5,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,30,35,40,140,160,180,200]).range(colorsHex);
 
 	}
 	// domain for jejunum [0,0.5,1,2,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,500,1000,2000,5000,6000,7000,8000]
@@ -624,65 +625,66 @@ var counter=0;
 var runanimationEdge;
 var runanimationNode;
 var runanimationTotal;
-function networkTimeSeries(playerid){
-	var colors=getColor()
-	var ColorNodes=function(){
-		if(counter==Object.keys(dataExpr.ExprValue[0]).length-1){
-			colorsmap=getNodeMap(counter,colors);
-			d3.selectAll('.node').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
-			var div=document.getElementById('TimeStep2D')
-			div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
-			// if loop animation is false clear interval
-			if(document.getElementById('LoopAnimation').checked==false){
-			clearInterval(NodeAnimation)
-			}
-			//if loop animation is true set counter to zero
-			if(document.getElementById('LoopAnimation').checked==true){counter=-1}
-		}
-		else{
-			colorsmap=getNodeMap(counter,colors);
-			if(counter==0){// Set the initial color at t=0
-			SetInitialState=d3.selectAll('.node').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
+	function networkTimeSeries(playerid){
+		var colors=getColor()
+		var ColorNodes=function(){
+			if(counter==Object.keys(dataExpr.ExprValue[0]).length-1){
+				colorsmap=getNodeMap(counter,colors);
+				console.log(colorsmap)
+				d3.selectAll('circle').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
+				var div=document.getElementById('TimeStep2D')
+				div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
+				// if loop animation is false clear interval
+				if(document.getElementById('LoopAnimation').checked==false){
+					clearInterval(NodeAnimation)
+				}
+				//if loop animation is true set counter to zero
+				if(document.getElementById('LoopAnimation').checked==true){counter=-1}
 			}
 			else{
-			UpdateStates=d3.selectAll('.node').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]});
-		
+				colorsmap=getNodeMap(counter,colors);
+				if(counter==0){// Set the initial color at t=0
+					SetInitialState=d3.selectAll('circle').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
+				}
+				else{
+					UpdateStates=d3.selectAll('circle').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]});
+
+				}
+				var div=document.getElementById('TimeStep2D')
+				div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
+				counter++;
 			}
-			var div=document.getElementById('TimeStep2D')
-			div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
-			  counter++;
-			  }
-			
-			
-			}
+
+
+		}
 		// Color Edges /////////////////////////////////////////////////////////////////////////////////////////////////////
-	    var ColorEdges=function(){
-		if(counter==Object.keys(EdgeInfo[0]).length-1){
-			edgecolorsmap=getInteractionColors(counter);
-			d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]})
-			var div=document.getElementById('TimeStep2D')
-			div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
-			// if loop animation is false clear interval
-			
-			if(document.getElementById('LoopAnimation').checked==false){
-				clearInterval(EdgeAnimation)
-				return counter}
-			//if loop animation is true set counter to zero
-			if(document.getElementById('LoopAnimation').checked==true){counter=-1}
-		}
-		else{
-			edgecolorsmap=getInteractionColors(counter);
-			if(counter==0){// Set the initial color at t=0
-			SetInitialState=d3.selectAll('line').transition().duration(1000).style('opacity',function(d,i){return edgecolorsmap[i]})
+		var ColorEdges=function(){
+			if(counter==Object.keys(EdgeInfo[0]).length-1){
+				edgecolorsmap=getInteractionColors(counter);
+				d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]})
+				var div=document.getElementById('TimeStep2D')
+				div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
+				// if loop animation is false clear interval
+
+				if(document.getElementById('LoopAnimation').checked==false){
+					clearInterval(EdgeAnimation)
+					return counter}
+				//if loop animation is true set counter to zero
+				if(document.getElementById('LoopAnimation').checked==true){counter=-1}
 			}
 			else{
-			UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
+				edgecolorsmap=getInteractionColors(counter);
+				if(counter==0){// Set the initial color at t=0
+					SetInitialState=d3.selectAll('line').transition().duration(1000).style('opacity',function(d,i){return edgecolorsmap[i]})
+				}
+				else{
+					UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
+				}
+				var div=document.getElementById('TimeStep2D')
+				div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
+				counter++;
 			}
-			var div=document.getElementById('TimeStep2D')
-			div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
-			  counter++;
-			  }
-			}
+		}
 		// Separate function to color Nodes+Edges//////////////////////////////////////////////////////////
 		var ColorNodesEdges=function(){
 			// assumed that expression file dimensions == edge interaction file dimensions
@@ -710,83 +712,83 @@ function networkTimeSeries(playerid){
 			}
 		}
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// play button action
-	if(playerid==1){
-		if(counter==0){
-			if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
-			function runAnimation(){return setInterval(ColorNodes,4000)}
-			NodeAnimation=runAnimation()}
-		if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
-			function runAnimation(){return setInterval(ColorEdges,4000)}
-			EdgeAnimation=runAnimation()}
-		if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
-			function runAnimation(){return setInterval(ColorNodesEdges,4000)}
-			NodeEdgeAnimation=runAnimation()}
-		}
-		
-		else{
-			// Play button is pressed for the second time, for instance after animation is done
-			counter=0;
-			if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
-				function runAnimation(){return setInterval(ColorNodes,4000)}
-			NodeAnimation=runAnimation()}
-			if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
-				function runAnimation(){return setInterval(ColorNodes,4000)}
-			NodeAnimation=runAnimation()}
-			if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
-				function runAnimation(){return setInterval(ColorNodes,4000)}
-			NodeAnimation=runAnimation()
+		if(playerid==1){
+			if(counter==0){
+				if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
+					function runAnimation(){return setInterval(ColorNodes,4000)}
+					NodeAnimation=runAnimation()}
+				if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
+					function runAnimation(){return setInterval(ColorEdges,4000)}
+					EdgeAnimation=runAnimation()}
+				if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
+					function runAnimation(){return setInterval(ColorNodesEdges,4000)}
+					NodeEdgeAnimation=runAnimation()}
+			}
+
+			else{
+				// Play button is pressed for the second time, for instance after animation is done
+				counter=0;
+				if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
+					function runAnimation(){return setInterval(ColorNodes,4000)}
+					NodeAnimation=runAnimation()}
+				if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
+					function runAnimation(){return setInterval(ColorNodes,4000)}
+					NodeAnimation=runAnimation()}
+				if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
+					function runAnimation(){return setInterval(ColorNodes,4000)}
+					NodeAnimation=runAnimation()
 				}
-		}
+			}
 			return counter;
-	} 	
-	
-	if(playerid==2){
+		}
+
+		if(playerid==2){
 			//Handle the pause statement
-	var elem=document.getElementById('pauseButton')
+			var elem=document.getElementById('pauseButton')
 			if (elem.innerHTML=='pause'){
 				if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
-				clearInterval(NodeAnimation);}
+					clearInterval(NodeAnimation);}
 				if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
-				clearInterval(EdgeAnimation);}
+					clearInterval(EdgeAnimation);}
 				if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
-				clearInterval(NodeAnimation);}
-				elem.innerHTML='resume';	
-			// clear setInterval but save the time expired for resume function
+					clearInterval(NodeAnimation);}
+				elem.innerHTML='resume';
+				// clear setInterval but save the time expired for resume function
 			}
-		else{elem.innerHTML='pause'
-			if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
-				NodeAnimation=setInterval(ColorNodes,3000);}
-			if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
-				NodeAnimation=setInterval(ColorEdges,3000)}
-			}	
+			else{elem.innerHTML='pause'
+				if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
+					NodeAnimation=setInterval(ColorNodes,3000);}
+				if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
+					NodeAnimation=setInterval(ColorEdges,3000)}
+			}
 		}
-	
-	
-	
-	//forward button action 
+
+
+
+		//forward button action
 		if(playerid==3){
 			if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
-			if(counter<Object.keys(dataExpr.ExprValue[0]).length-1){
-				counter=counter+1
-				colorsmap=getNodeMap(counter,colors);
-				NodeUpdating=d3.selectAll('.node').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
-				var div=document.getElementById('TimeStep2D')
-				div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
-				return counter}
-			else{alert('Maximum time point reached')}
+				if(counter<Object.keys(dataExpr.ExprValue[0]).length-1){
+					counter=counter+1
+					colorsmap=getNodeMap(counter,colors);
+					NodeUpdating=d3.selectAll('.node').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
+					var div=document.getElementById('TimeStep2D')
+					div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
+					return counter}
+				else{alert('Maximum time point reached')}
 			}
 			if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
-			if(counter<Object.keys(EdgeInfo[0]).length-1){	
-				counter=counter+1;
-				edgecolorsmap=getInteractionColors(counter);
-				UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
-				var div=document.getElementById('TimeStep2D')
-				div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
-				return counter
-			}
-			else{alert('Maximum time point reached')}		
+				if(counter<Object.keys(EdgeInfo[0]).length-1){
+					counter=counter+1;
+					edgecolorsmap=getInteractionColors(counter);
+					UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
+					var div=document.getElementById('TimeStep2D')
+					div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
+					return counter
+				}
+				else{alert('Maximum time point reached')}
 			}
 			if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
 				// First change edges, then change nodes (assume same dimensions size data)
@@ -800,42 +802,42 @@ function networkTimeSeries(playerid){
 					div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
 				}
 			}
-			
-				
-			} 
-				
-	if(playerid==4){
-	// backward with time step 1
-		if(counter==0){alert('First time point reached')}
-		else{
-			if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
-				counter=counter-1;
-				colorsmap=getNodeMap(counter,colors);
-				NodeUpdating=d3.selectAll('.node').transition().duration(10).attr('fill',function(d,i){return colorsmap[i]})
-				var div=document.getElementById('TimeStep2D')
-				div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
-			return counter}
-			if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
-				counter=counter-1;
-				edgecolorsmap=getInteractionColors(counter);
-				UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
-				var div=document.getElementById('TimeStep2D')
-				div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
-				return counter
+
+
+		}
+
+		if(playerid==4){
+			// backward with time step 1
+			if(counter==0){alert('First time point reached')}
+			else{
+				if($('input[name="DataControlVideo"]:checked').val()=='ColorNodesTime'){
+					counter=counter-1;
+					colorsmap=getNodeMap(counter,colors);
+					NodeUpdating=d3.selectAll('.node').transition().duration(10).attr('fill',function(d,i){return colorsmap[i]})
+					var div=document.getElementById('TimeStep2D')
+					div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
+					return counter}
+				if($('input[name="DataControlVideo"]:checked').val()=='EdgeInteractionTime'){
+					counter=counter-1;
+					edgecolorsmap=getInteractionColors(counter);
+					UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
+					var div=document.getElementById('TimeStep2D')
+					div.innerHTML='time: '+Object.keys(EdgeInfo[0])[counter+1]
+					return counter
 				}
-			if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
-				counter=counter-1;
-				colorsmap=getNodeMap(counter,colors);
-				edgecolorsmap=getInteractionColors(counter);
-				NodeUpdating=d3.selectAll('.node').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
-				UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
-				var div=document.getElementById('TimeStep2D')
-				div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
-				return counter
+				if($('input[name="DataControlVideo"]:checked').val()=='NodeEdgeTime'){
+					counter=counter-1;
+					colorsmap=getNodeMap(counter,colors);
+					edgecolorsmap=getInteractionColors(counter);
+					NodeUpdating=d3.selectAll('.node').transition().duration(2000).attr('fill',function(d,i){return colorsmap[i]})
+					UpdateStates=d3.selectAll('line').transition().duration(2000).style('opacity',function(d,i){return edgecolorsmap[i]});
+					var div=document.getElementById('TimeStep2D')
+					div.innerHTML='time: '+Object.keys(dataExpr.ExprValue[0])[counter]
+					return counter
 				}
 			}
+		}
 	}
-}		
 
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //   Function to send the network information to 3D
