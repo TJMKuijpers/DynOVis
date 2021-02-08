@@ -608,7 +608,7 @@ function getColor(){
 		var colorrange=colorbrewer.Spectral[11]
 		var color=d3.scaleLinear().domain([-1*RangePoint,-0.75*RangePoint,-0.5*RangePoint,-0.25*RangePoint,0,0.25*RangePoint,0.5*RangePoint,0.75*RangePoint,RangePoint]).range(colorrange)
 		}
-	if(ColorScaleInput == 'RNASequencing'){
+	if(ColorScaleInput == 'TransQST_Colon'){
 		var colorsHex = [d3.rgb('#4d004b'),d3.rgb('#810f7c'),d3.rgb('#88419d'),d3.rgb('#8c6bb1'),d3.rgb('#8c96c6'),d3.rgb('#9ebcda'),d3.rgb('#bfd3e6'),d3.rgb('#e0ecf4'),d3.rgb('#f7fcfd'),d3.rgb("#FF0000"),d3.rgb("#FF1100"),d3.rgb("#FF2300"),d3.rgb("#FF3400"),d3.rgb("#FF4600"),d3.rgb("#FF5700"),d3.rgb("#FF6900"),d3.rgb("#FF7B00"),
 			d3.rgb("#FF8C00"),d3.rgb("#FF9E00"),d3.rgb("#FFAF00"),d3.rgb("#FFC100"),d3.rgb("#FFD300"),d3.rgb("#FFE400"),d3.rgb("#FFF600"),d3.rgb("#F7FF00"),
 			d3.rgb("#E5FF00"),d3.rgb("#D4FF00"),d3.rgb("#C2FF00"),d3.rgb("#B0FF00"),d3.rgb("#9FFF00"),d3.rgb("#8DFF00"),d3.rgb("#7CFF00"),d3.rgb("#6AFF00"),d3.rgb("#58FF00"),d3.rgb("#47FF00")
@@ -618,9 +618,15 @@ function getColor(){
 		var color = d3.scaleLinear().domain([0,0.33,0.66,0.99,1.22,1.5,2,2.5,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,30,35,40,140,160,180,200]).range(colorsHex);
 
 	}
+		if(ColorScaleInput == 'TransQST_Jejunum'){
+			var colorsHex = [d3.rgb('#4d004b'),d3.rgb('#810f7c'),d3.rgb('#88419d'),d3.rgb('#8c6bb1'),d3.rgb('#8c96c6'),d3.rgb('#9ebcda'),d3.rgb('#bfd3e6'),d3.rgb('#e0ecf4'),d3.rgb('#f7fcfd'),d3.rgb("#FF0000"),d3.rgb("#FF1100"),d3.rgb("#FF2300"),d3.rgb("#FF3400"),d3.rgb("#FF4600"),d3.rgb("#FF5700"),d3.rgb("#FF6900"),d3.rgb("#FF7B00"),
+			d3.rgb("#FF8C00"),d3.rgb("#FF9E00"),d3.rgb("#FFAF00"),d3.rgb("#FFC100"),d3.rgb("#FFD300"),d3.rgb("#FFE400"),d3.rgb("#FFF600"),d3.rgb("#F7FF00"),
+			d3.rgb("#E5FF00"),d3.rgb("#D4FF00"),d3.rgb("#C2FF00"),d3.rgb("#B0FF00"),d3.rgb("#9FFF00"),d3.rgb("#8DFF00"),d3.rgb("#7CFF00"),d3.rgb("#6AFF00"),d3.rgb("#58FF00"),d3.rgb("#47FF00")
+			,d3.rgb("#35FF00"),d3.rgb("#24FF00"),d3.rgb("#12FF00"),d3.rgb("#00FF00"), d3.rgb('#3FDECE'),d3.rgb('#00CFD2'),d3.rgb('#00B6C7'),d3.rgb('#624120'),d3.rgb('#815A32'),d3.rgb('#977856')];
+		var color = d3.scaleLinear().domain([0,0.5,1,2,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,500,1000,2000,5000,6000,7000,8000]).range(colorsHex);
+	}
 	// old colors for brown to black
 	//d3.rgb('#8C8783'),d3.rgb('#716761'),d3.rgb('#5A4D44'),d3.rgb('#A17B66'),d3.rgb('#CAAEA2'),d3.rgb('#654320'),d3.rgb('#51361a')
-	// domain for jejunum [0,0.5,1,2,3,3.1,4,4.25,4.75,5,5.25,5.5,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.5,12,500,1000,2000,5000,6000,7000,8000]
 
 	return color;}
 

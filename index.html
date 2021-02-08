@@ -561,7 +561,7 @@ As a last option, the user can upload an interaction file, which is a file that 
 					<b> Legend node expression<b><br/>
 					<div id='ColorBar' width='160px' height='30px'></div>
 					<b> Time/Dose point<b><br />
-					<div id='TimeStep2D'></div>
+
 					</div> 
 			</div> 
 				</div>
@@ -601,7 +601,12 @@ As a last option, the user can upload an interaction file, which is a file that 
 					</div> 
 					</div>
 					  <div class="col-sm-8">
-						  <div id="network-area"></div>
+                          <div id="total"></div>
+						  <div id="network-area">
+                              <div id='TimeStep2D'></div>
+                          </div>
+                      </div>
+
 				    </div>
 				</div>
 				 </div>
@@ -858,7 +863,8 @@ As a last option, the user can upload an interaction file, which is a file that 
 						<option value='BrownGreenScale'> Brown-Green scale </option>
 						<option value='PurpleOrangeScale'> Purple-Orange scale </option>
 						<option value='SpectralScale'> Spectral scale </option>
-                        <option value="RNASequencing"> RNAseq data</option>
+                        <option value="TransQST_Colon"> TransQST Colon </option>
+                        <option value="TransQST_Jejunum">TransQST Jejunum</option>
 						</select>
 					</td>
 					</tr>
